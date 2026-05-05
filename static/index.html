@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BiomassML — Grinding Energy Simulation</title>
+  <link rel="stylesheet" href="/static/style.css?v=4" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+</head>
+<body>
+
+<!-- ===================== SIDEBAR ===================== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">🌿</div>
+    <div class="brand-text">
+      <span class="brand-name">BiomassML</span>
+      <span class="brand-sub">Energy Simulation</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item active" data-section="dashboard">
+      <span class="nav-icon">📊</span><span>Dashboard</span>
+    </a>
+    <a class="nav-item" data-section="predict">
+      <span class="nav-icon">🔮</span><span>ML Predictor</span>
+    </a>
+    <a class="nav-item" data-section="visualize">
+      <span class="nav-icon">📈</span><span>Visualizations</span>
+    </a>
+    <a class="nav-item" data-section="granulo">
+      <span class="nav-icon">🔬</span><span>Granulometric</span>
+    </a>
+    <a class="nav-item" data-section="optimize">
+      <span class="nav-icon">⚡</span><span>Optimization</span>
+    </a>
+    <a class="nav-item" data-section="metrics">
+      <span class="nav-icon">🎯</span><span>ML Metrics</span>
+    </a>
+    <a class="nav-item" data-section="about">
+      <span class="nav-icon">📄</span><span>Project Report</span>
+    </a>
+    <a class="nav-item" data-section="howitworks">
+      <span class="nav-icon">🛠️</span><span>How We Built It</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <p>ECE Major Project</p>
+    <p>Suhani Tyagi &amp; Vaishali Kasotiya</p>
+    <p>Supervisor: Mr. Sandeep Kumar</p>
+  </div>
+</aside>
+
+<!-- ===================== MAIN ===================== -->
+<div class="main-wrapper">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="page-title" id="page-title">Dashboard</h1>
+      <p class="page-sub" id="page-sub">Overview of biomass grinding energy simulation</p>
+    </div>
+    <div class="topbar-right">
+      <div class="status-badge" id="status-badge">
+        <span class="dot pulsing"></span> System Online
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- ======= DASHBOARD ======= -->
+    <section class="section active" id="section-dashboard">
+      <div class="hero-banner">
+        <div class="hero-text">
+          <h2>Energy Consumption at Size Reduction of<br>Lignocellulose Biomass for Bioenergy</h2>
+          <p>An ML-powered interactive simulation based on experimental research published in <em>Sustainability 2019, 11, 2477</em>. Predict energy consumption, analyze grinding behavior, and optimize mill parameters for five types of biomass.</p>
+          <div class="hero-tags">
+            <span class="tag">Biomass Processing</span>
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Energy Optimization</span>
+            <span class="tag">Bioenergy</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="rotating-wheel">
+            <div class="wheel-ring ring-1"></div>
+            <div class="wheel-ring ring-2"></div>
+            <div class="wheel-ring ring-3"></div>
+            <div class="wheel-core">⚙️</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🌾</div>
+          <div class="stat-value">5</div>
+          <div class="stat-label">Biomass Types</div>
+          <div class="stat-desc">Alfalfa · Corn Stalk · Mountain Grass · Miscanthus · Willow</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚙️</div>
+          <div class="stat-value">2</div>
+          <div class="stat-label">Mill Types</div>
+          <div class="stat-desc">Knife Mill GM200 · Hammer Mill MC-22 (22kW)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🤖</div>
+          <div class="stat-value">4</div>
+          <div class="stat-label">ML Models</div>
+          <div class="stat-desc">Polynomial Regression · R² &gt; 0.96 accuracy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-value">65</div>
+          <div class="stat-label">Max kJ/kg</div>
+          <div class="stat-desc">Energy peak for Miscanthus with 10 mm sieve</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <h3>Energy Comparison Overview</h3>
+            <span class="chip">Knife Mill</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-overview"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Research Workflow</h3>
+          </div>
+          <div class="workflow">
+            <div class="wf-step">
+              <div class="wf-num">01</div>
+              <div class="wf-content">
+                <strong>Biomass Collection</strong>
+                <p>Alfalfa, corn stalks, mountain grass, Miscanthus, willow harvested at 10–12% moisture</p>
+              </div>
+            </div>
+            <div class="wf-step">
+              <div class="wf-num">02</div>
+              <div class="wf-content">
+                <strong>Laboratory Grinding</strong>
+                <p>Knife mill GM200 at 3000–9000 rpm; power and energy recorded at each speed step</p>
+              </div>
+            </div>
+            <div class="wf-step">
+              <div class="wf-num">03</div>
+              <div class="wf-content">
+                <strong>Granulometric Analysis</strong>
+                <p>ISO 3310 sieve stack: 0–2.8 mm; mean equivalent diameter calculated per fraction</p>
+              </div>
+            </div>
+            <div class="wf-step">
+              <div class="wf-num">04</div>
+              <div class="wf-content">
+                <strong>Industrial-Scale Test</strong>
+                <p>Hammer mill MC-22 with 10 mm / 16 mm sieves; Miscanthus and willow grinded</p>
+              </div>
+            </div>
+            <div class="wf-step">
+              <div class="wf-num">05</div>
+              <div class="wf-content">
+                <strong>ML Modelling &amp; Simulation</strong>
+                <p>Polynomial regression models trained; interactive prediction and optimization enabled</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= PREDICTOR ======= -->
+    <section class="section" id="section-predict">
+      <div class="two-col">
+        <!-- Knife Mill -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Knife Mill Predictor</h3>
+            <span class="chip chip-blue">GM200</span>
+          </div>
+          <p class="card-desc">Predict energy consumption, grinding power, and output particle size for laboratory knife mill.</p>
+          <form id="form-knife" class="pred-form">
+            <div class="form-group">
+              <label>Biomass Type</label>
+              <select id="k-biomass">
+                <option value="alfalfa">Alfalfa</option>
+                <option value="corn_stalk">Corn Stalk</option>
+                <option value="mountain_grass">Mountain Grass</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Rotor Speed (rpm): <span id="k-speed-val">6000</span></label>
+              <input type="range" id="k-speed" min="2000" max="10000" step="100" value="6000"
+                     oninput="document.getElementById('k-speed-val').textContent=this.value" />
+              <div class="range-labels"><span>2000</span><span>10000</span></div>
+            </div>
+            <button type="submit" class="btn-predict">
+              <span>Run Prediction</span> →
+            </button>
+          </form>
+          <div id="result-knife" class="result-panel hidden"></div>
+        </div>
+
+        <!-- Hammer Mill -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Hammer Mill Predictor</h3>
+            <span class="chip chip-orange">MC-22 · 22 kW</span>
+          </div>
+          <p class="card-desc">Predict industrial energy consumption and processing cost for hammer mill operations.</p>
+          <form id="form-hammer" class="pred-form">
+            <div class="form-group">
+              <label>Biomass Type</label>
+              <select id="h-biomass">
+                <option value="miscanthus">Miscanthus</option>
+                <option value="willow">Willow</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Sieve Orifice Size</label>
+              <div class="toggle-group">
+                <button type="button" class="toggle-btn active" data-value="10mm" id="sieve-10">10 mm</button>
+                <button type="button" class="toggle-btn" data-value="16mm" id="sieve-16">16 mm</button>
+              </div>
+              <input type="hidden" id="h-sieve" value="10mm" />
+            </div>
+            <div class="form-group">
+              <label>Rotor Speed (rpm): <span id="h-speed-val">800</span></label>
+              <input type="range" id="h-speed" min="300" max="2000" step="50" value="800"
+                     oninput="document.getElementById('h-speed-val').textContent=this.value" />
+              <div class="range-labels"><span>300</span><span>2000</span></div>
+            </div>
+            <button type="submit" class="btn-predict">
+              <span>Run Prediction</span> →
+            </button>
+          </form>
+          <div id="result-hammer" class="result-panel hidden"></div>
+        </div>
+      </div>
+
+      <!-- Live sweep chart -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h3>Live Prediction Sweep</h3>
+          <div class="sweep-controls">
+            <select id="sweep-biomass">
+              <option value="alfalfa">Alfalfa</option>
+              <option value="corn_stalk">Corn Stalk</option>
+              <option value="mountain_grass">Mountain Grass</option>
+            </select>
+            <button class="btn-sm" onclick="runSweep()">Generate Sweep</button>
+          </div>
+        </div>
+        <div class="chart-wrap h200"><canvas id="chart-sweep"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ======= VISUALIZATIONS ======= -->
+    <section class="section" id="section-visualize">
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <h3>Specific Energy vs. Rotor Speed</h3>
+            <span class="chip">MJ/kg</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-energy"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Mean Grinding Power vs. Rotor Speed</h3>
+            <span class="chip">Watts</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-power"></canvas></div>
+        </div>
+      </div>
+      <div class="two-col mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h3>Mean Particle Size vs. Rotor Speed</h3>
+            <span class="chip">mm</span>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-particle"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Hammer Mill — Energy Consumption</h3>
+            <div class="sieve-tab-group">
+              <button class="sieve-tab active" data-sieve="10mm">10 mm sieve</button>
+              <button class="sieve-tab" data-sieve="16mm">16 mm sieve</button>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="chart-hammer"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= GRANULOMETRIC ======= -->
+    <section class="section" id="section-granulo">
+      <div class="card">
+        <div class="card-header">
+          <h3>Granulometric Analysis — Particle Size Distribution</h3>
+        </div>
+        <p class="card-desc">Select a biomass type and rotor speed to see the percentage of ground material retained on each ISO 3310 classifier sieve.</p>
+        <div class="granulo-controls">
+          <div class="form-group inline">
+            <label>Biomass</label>
+            <select id="g-biomass" onchange="updateGranulo()">
+              <option value="alfalfa">Alfalfa</option>
+              <option value="corn_stalk">Corn Stalk</option>
+              <option value="mountain_grass">Mountain Grass</option>
+            </select>
+          </div>
+          <div class="form-group inline">
+            <label>Rotor Speed</label>
+            <select id="g-speed" onchange="updateGranulo()">
+              <option value="0">3000 rpm</option>
+              <option value="1">4500 rpm</option>
+              <option value="2" selected>6000 rpm</option>
+              <option value="3">7500 rpm</option>
+              <option value="4">9000 rpm</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-wrap h300"><canvas id="chart-granulo"></canvas></div>
+        <div id="granulo-stats" class="granulo-stats"></div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <h3>Particle Size Evolution</h3>
+          <span class="chip">All Speeds Compared</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chart-granulo-all"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ======= OPTIMIZATION ======= -->
+    <section class="section" id="section-optimize">
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <h3>Parameter Optimization</h3>
+            <span class="chip chip-yellow">⚡ AI Powered</span>
+          </div>
+          <p class="card-desc">Find the optimal rotor speed that minimizes energy consumption. Optionally constrain by target output particle size.</p>
+          <form id="form-optimize" class="pred-form">
+            <div class="form-group">
+              <label>Mill Type</label>
+              <div class="toggle-group">
+                <button type="button" class="toggle-btn active" data-value="knife" id="opt-knife">Knife Mill</button>
+                <button type="button" class="toggle-btn" data-value="hammer" id="opt-hammer">Hammer Mill</button>
+              </div>
+              <input type="hidden" id="opt-mill" value="knife" />
+            </div>
+            <div class="form-group">
+              <label>Biomass Type</label>
+              <select id="opt-biomass">
+                <option value="alfalfa">Alfalfa</option>
+                <option value="corn_stalk">Corn Stalk</option>
+                <option value="mountain_grass">Mountain Grass</option>
+              </select>
+            </div>
+            <div class="form-group" id="opt-particle-group">
+              <label>Target Particle Size (mm) — optional</label>
+              <input type="number" id="opt-target" min="0.1" max="3.5" step="0.1" placeholder="e.g. 1.0" />
+            </div>
+            <div class="form-group hidden" id="opt-sieve-group">
+              <label>Sieve Size</label>
+              <select id="opt-sieve">
+                <option value="10mm">10 mm</option>
+                <option value="16mm">16 mm</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-predict">
+              <span>Run Optimization</span> →
+            </button>
+          </form>
+        </div>
+
+        <div class="card" id="opt-result-card">
+          <div class="card-header">
+            <h3>Optimization Result</h3>
+          </div>
+          <div id="opt-result" class="opt-placeholder">
+            <div class="placeholder-icon">⚡</div>
+            <p>Configure parameters and run optimization to see results</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <h3>Energy Sweep — All Speeds</h3>
+          <span class="chip">Optimization Curve</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chart-opt"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ======= ML METRICS ======= -->
+    <section class="section" id="section-metrics">
+      <div class="card">
+        <div class="card-header">
+          <h3>Machine Learning Models</h3>
+        </div>
+        <p class="card-desc">All models use <strong>Polynomial Regression (degree 2)</strong> with Ridge regularization, trained on experimental data from the paper. The feature vector includes biomass type encoding and mill rotor speed.</p>
+        <div class="metrics-grid" id="metrics-grid"></div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <h3>Model Architecture</h3>
+        </div>
+        <div class="arch-diagram">
+          <div class="arch-col">
+            <div class="arch-title">Input Features</div>
+            <div class="arch-box">Biomass Type<br><small>One-hot encoded</small></div>
+            <div class="arch-box">Rotor Speed (rpm)</div>
+            <div class="arch-box">Sieve Size (mm)<br><small>Hammer mill only</small></div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-col">
+            <div class="arch-title">Transformation</div>
+            <div class="arch-box highlight">Polynomial Features<br><small>degree=2 expansion</small></div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-col">
+            <div class="arch-title">Regression</div>
+            <div class="arch-box highlight">Ridge Regression<br><small>L2 regularization</small></div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-col">
+            <div class="arch-title">Outputs</div>
+            <div class="arch-box">Specific Energy<br><small>MJ/kg or kWh/t</small></div>
+            <div class="arch-box">Mean Power (W)</div>
+            <div class="arch-box">Particle Size (mm)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-header">
+          <h3>Model Fit — Predicted vs Actual</h3>
+          <span class="chip">Knife Mill Energy</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chart-fit"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ======= ABOUT / PROJECT REPORT ======= -->
+    <section class="section" id="section-about">
+
+      <!-- Hero -->
+      <div class="about-hero">
+        <div class="about-hero-badge">ECE Major Project — 2025–26</div>
+        <h1 class="about-title">Energy Consumption at Size Reduction of<br>Lignocellulose Biomass for Bioenergy</h1>
+        <p class="about-subtitle">ML-powered interactive simulation · Sustainability 2019, 11, 2477</p>
+        <div class="about-meta-row">
+          <div class="about-meta-item">
+            <span class="about-meta-label">Students</span>
+            <span class="about-meta-val">Suhani Tyagi &amp; Vaishali Kasotiya</span>
+          </div>
+          <div class="about-meta-sep"></div>
+          <div class="about-meta-item">
+            <span class="about-meta-label">Supervisor</span>
+            <span class="about-meta-val">Mr. Sandeep Kumar</span>
+          </div>
+          <div class="about-meta-sep"></div>
+          <div class="about-meta-item">
+            <span class="about-meta-label">Department</span>
+            <span class="about-meta-val">ECE</span>
+          </div>
+          <div class="about-meta-sep"></div>
+          <div class="about-meta-item">
+            <span class="about-meta-label">Session</span>
+            <span class="about-meta-val">Feb 2026</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paper strip -->
+      <div class="paper-strip mt-4">
+        <div class="ps-left">
+          <div class="ps-label">Reference Paper</div>
+          <div class="ps-title">"Energy Consumption at Size Reduction of Lignocellulose Biomass for Bioenergy"</div>
+          <div class="ps-authors">Moiceanu et al. · Politehnica University of Bucharest · Sustainability 2019, 11, 2477</div>
+        </div>
+        <div class="ps-right">
+          <div class="ps-doi">DOI: 10.3390/su11092477</div>
+          <div class="ps-date">Published: 27 April 2019</div>
+        </div>
+      </div>
+
+      <!-- Problem + Objective -->
+      <div class="two-col mt-4">
+        <div class="card">
+          <div class="card-header"><h3>❓ Problem</h3></div>
+          <div class="icon-list">
+            <div class="il-item"><span class="il-icon">⚡</span><span>Grinding biomass consumes <strong>50–65 kJ/kg</strong> — a major processing cost</span></div>
+            <div class="il-item"><span class="il-icon">🌡️</span><span>Energy varies by biomass type, speed, moisture &amp; sieve size</span></div>
+            <div class="il-item"><span class="il-icon">🔧</span><span>Wrong mill parameters = wasted energy &amp; poor particle output</span></div>
+            <div class="il-item"><span class="il-icon">🚫</span><span>No real-time tool exists to predict &amp; optimize these parameters</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>🎯 Objective</h3></div>
+          <div class="icon-list">
+            <div class="il-item"><span class="il-icon">📊</span><span>Digitize &amp; visualize all paper experimental data interactively</span></div>
+            <div class="il-item"><span class="il-icon">🤖</span><span>Train ML models for real-time energy &amp; particle size prediction</span></div>
+            <div class="il-item"><span class="il-icon">⚡</span><span>Optimize mill speed to minimize energy for any biomass type</span></div>
+            <div class="il-item"><span class="il-icon">🌐</span><span>Deliver everything through a clean browser-based interface</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biomass cards -->
+      <div class="card mt-4">
+        <div class="card-header"><h3>Biomass Types &amp; Equipment</h3></div>
+        <div class="bio-cards">
+          <div class="bio-card" style="border-color:rgba(76,175,80,0.4)">
+            <div class="bio-icon">🌾</div>
+            <div class="bio-name">Alfalfa</div>
+            <div class="bio-mill">⚙️ Knife Mill GM200</div>
+            <div class="bio-energy">1.23 – 1.44 <span>MJ/kg</span></div>
+            <div class="bio-tags"><span>30–50 mm</span><span>~10% moisture</span></div>
+          </div>
+          <div class="bio-card" style="border-color:rgba(255,152,0,0.4)">
+            <div class="bio-icon">🌽</div>
+            <div class="bio-name">Corn Stalk</div>
+            <div class="bio-mill">⚙️ Knife Mill GM200</div>
+            <div class="bio-energy">1.17 – 2.31 <span>MJ/kg</span></div>
+            <div class="bio-tags"><span>30–50 mm</span><span>Highest energy</span></div>
+          </div>
+          <div class="bio-card" style="border-color:rgba(91,163,245,0.4)">
+            <div class="bio-icon">🌿</div>
+            <div class="bio-name">Mountain Grass</div>
+            <div class="bio-mill">⚙️ Knife Mill GM200</div>
+            <div class="bio-energy">1.23 – 1.44 <span>MJ/kg</span></div>
+            <div class="bio-tags"><span>30–50 mm</span><span>~10% moisture</span></div>
+          </div>
+          <div class="bio-card" style="border-color:rgba(169,124,245,0.4)">
+            <div class="bio-icon">🎋</div>
+            <div class="bio-name">Miscanthus</div>
+            <div class="bio-mill">🔧 Hammer Mill MC-22</div>
+            <div class="bio-energy">14 – 18 <span>kWh/t</span></div>
+            <div class="bio-tags"><span>123–127 mm</span><span>10 mm sieve</span></div>
+          </div>
+          <div class="bio-card" style="border-color:rgba(85,212,245,0.4)">
+            <div class="bio-icon">🌳</div>
+            <div class="bio-name">Willow</div>
+            <div class="bio-mill">🔧 Hammer Mill MC-22</div>
+            <div class="bio-energy">10 – 14 <span>kWh/t</span></div>
+            <div class="bio-tags"><span>24–47 mm</span><span>8.9–12% moisture</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Methodology flow -->
+      <div class="card mt-4">
+        <div class="card-header"><h3>Methodology Flow</h3></div>
+        <div class="method-flow">
+          <div class="mf-step">
+            <div class="mf-icon">🌾</div>
+            <div class="mf-label">Biomass Prep</div>
+            <div class="mf-sub">Dried · Cut to 30–50 mm</div>
+          </div>
+          <div class="mf-arrow">→</div>
+          <div class="mf-step">
+            <div class="mf-icon">⚙️</div>
+            <div class="mf-label">Knife Mill</div>
+            <div class="mf-sub">3000 – 9000 rpm · 5 speeds</div>
+          </div>
+          <div class="mf-arrow">→</div>
+          <div class="mf-step">
+            <div class="mf-icon">🔬</div>
+            <div class="mf-label">Sieve Analysis</div>
+            <div class="mf-sub">ISO 3310 · 6 sieve sizes</div>
+          </div>
+          <div class="mf-arrow">→</div>
+          <div class="mf-step">
+            <div class="mf-icon">🔧</div>
+            <div class="mf-label">Hammer Mill</div>
+            <div class="mf-sub">22 kW · 10 mm &amp; 16 mm sieve</div>
+          </div>
+          <div class="mf-arrow">→</div>
+          <div class="mf-step mf-highlight">
+            <div class="mf-icon">🤖</div>
+            <div class="mf-label">ML Model</div>
+            <div class="mf-sub">Poly Regression · R² &gt; 0.98</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ML models + Key finding side by side -->
+      <div class="two-col mt-4">
+        <div class="card">
+          <div class="card-header"><h3>ML Models</h3><span class="chip">Polynomial Regression · Ridge</span></div>
+          <div class="ml-rows">
+            <div class="ml-row-v"><span class="ml-rv-name">Knife Energy</span><div class="ml-rv-bar"><div style="width:98.8%"></div></div><span class="ml-rv-r2">R² 0.988</span></div>
+            <div class="ml-row-v"><span class="ml-rv-name">Knife Power</span><div class="ml-rv-bar"><div style="width:98.8%"></div></div><span class="ml-rv-r2">R² 0.988</span></div>
+            <div class="ml-row-v"><span class="ml-rv-name">Knife Particle</span><div class="ml-rv-bar"><div style="width:98.7%"></div></div><span class="ml-rv-r2">R² 0.987</span></div>
+            <div class="ml-row-v"><span class="ml-rv-name">Hammer Energy</span><div class="ml-rv-bar"><div style="width:99.9%"></div></div><span class="ml-rv-r2">R² 0.999</span></div>
+          </div>
+          <div class="formula-compact">
+            d<sub>m</sub> = Σ (p<sub>i</sub> · l<sub>i</sub>) / 100
+            <span>ISO 3310 particle size formula</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Key Findings</h3></div>
+          <div class="findings-list">
+            <div class="finding"><div class="finding-num">01</div><div class="finding-text">↑ Speed → ↓ Energy <em>&amp;</em> ↓ Particle Size</div></div>
+            <div class="finding"><div class="finding-num">02</div><div class="finding-text">Corn stalk uses <strong>97% more energy</strong> than alfalfa at 3000 rpm</div></div>
+            <div class="finding"><div class="finding-num">03</div><div class="finding-text">10 mm sieve uses <strong>30–40% more energy</strong> than 16 mm sieve</div></div>
+            <div class="finding"><div class="finding-num">04</div><div class="finding-text">Alfalfa &amp; grass = most energy-efficient across all speeds</div></div>
+            <div class="finding"><div class="finding-num">05</div><div class="finding-text">R² &gt; 0.969 confirms power-type energy distribution (paper)</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tech + Reference -->
+      <div class="two-col mt-4">
+        <div class="card">
+          <div class="card-header"><h3>Tech Stack</h3></div>
+          <div class="tech-pills">
+            <span class="tech-pill">🐍 Python 3.13</span>
+            <span class="tech-pill">⚡ FastAPI</span>
+            <span class="tech-pill">🤖 scikit-learn</span>
+            <span class="tech-pill">🔢 NumPy</span>
+            <span class="tech-pill">📊 Chart.js 4.4</span>
+            <span class="tech-pill">🌐 HTML / CSS / JS</span>
+            <span class="tech-pill">🦄 Uvicorn</span>
+            <span class="tech-pill">📡 REST API</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Reference</h3></div>
+          <div class="ref-compact">
+            <div class="ref-authors">Moiceanu G., Paraschiv G., Voicu G., et al.</div>
+            <div class="ref-title">"Energy Consumption at Size Reduction of Lignocellulose Biomass for Bioenergy"</div>
+            <div class="ref-meta">Sustainability 2019, 11, 2477 · DOI: 10.3390/su11092477</div>
+            <div class="ref-meta">Politehnica University of Bucharest · Published 27 April 2019</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======= HOW WE BUILT IT ======= -->
+    <section class="section" id="section-howitworks">
+
+      <!-- Hero -->
+      <div class="hwb-hero">
+        <div class="hwb-hero-left">
+          <div class="about-hero-badge">Technical Deep-Dive</div>
+          <h2 class="hwb-title">How We Built This Simulation</h2>
+          <p class="hwb-sub">From raw research paper data to a fully interactive ML-powered web application</p>
+          <div class="hwb-stats">
+            <div class="hwb-stat"><span>7</span>Files</div>
+            <div class="hwb-stat"><span>~550</span>Lines Python</div>
+            <div class="hwb-stat"><span>~700</span>Lines CSS</div>
+            <div class="hwb-stat"><span>~600</span>Lines JS</div>
+            <div class="hwb-stat"><span>4</span>ML Models</div>
+          </div>
+        </div>
+        <div class="hwb-hero-right">
+          <div class="file-tree">
+            <div class="ft-root">📁 major project/</div>
+            <div class="ft-item ft-py">├── 🐍 app.py <span>Backend + ML</span></div>
+            <div class="ft-item">├── 📋 requirements.txt</div>
+            <div class="ft-item">├── ▶️  start.bat</div>
+            <div class="ft-item">└── 📁 static/</div>
+            <div class="ft-item ft-html">&nbsp;&nbsp;&nbsp;&nbsp;├── 🌐 index.html <span>Frontend UI</span></div>
+            <div class="ft-item ft-css">&nbsp;&nbsp;&nbsp;&nbsp;├── 🎨 style.css <span>Dark theme</span></div>
+            <div class="ft-item ft-js">&nbsp;&nbsp;&nbsp;&nbsp;└── ⚡ app.js <span>Charts + API</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: Data -->
+      <div class="hwb-step-card mt-4">
+        <div class="hwb-step-num">STEP 01</div>
+        <div class="hwb-step-content">
+          <div class="hwb-step-header">
+            <div class="hwb-step-icon">📄</div>
+            <div>
+              <h3>Extracting Data from the Research Paper</h3>
+              <p>We manually digitized all experimental tables and values from the PDF paper into Python data structures</p>
+            </div>
+          </div>
+          <div class="two-col" style="gap:14px; margin-top:16px">
+            <div class="code-block">
+              <div class="code-label">Table 1 — Knife Mill Energy Data</div>
+              <pre><code>KNIFE_DATA = {
+  "alfalfa": {
+    "sec": [1.44, 1.38, 1.26,
+            1.23, 1.23],  # MJ/kg
+    "mean_power": [480, 460, 420,
+                   410, 410],  # W
+  },
+  "corn_stalk": {
+    "sec": [2.31, 1.68, 1.44,
+            1.26, 1.17],
+    "mean_power": [770, 560, 480,
+                   420, 390],
+  },
+  ...
+}</code></pre>
+            </div>
+            <div class="code-block">
+              <div class="code-label">Table 2 — Granulometric Data</div>
+              <pre><code>GRANULO_DATA = {
+  "alfalfa": {
+    "distributions": [
+      [7.5, 3.0, 2.5, 1.0,
+       22.5, 63.5],  # 3000 rpm
+      [23.0, 13.0, 9.0, 1.5,
+       26.5, 27.0],  # 4500 rpm
+      ...
+    ],
+    "mean_size": [2.80, 1.88,
+      0.97, 0.74, 0.62],  # mm
+  }
+}</code></pre>
+            </div>
+          </div>
+          <div class="hwb-callout">
+            <span class="hc-icon">💡</span>
+            <span>5 biomass types · 5 speed levels · 2 mill types · 2 sieve sizes → <strong>~45 experimental data points</strong> digitized</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: ML -->
+      <div class="hwb-step-card mt-4">
+        <div class="hwb-step-num">STEP 02</div>
+        <div class="hwb-step-content">
+          <div class="hwb-step-header">
+            <div class="hwb-step-icon">🤖</div>
+            <div>
+              <h3>Training the ML Models</h3>
+              <p>We chose Polynomial Regression because the paper proves energy follows a power-type curve with R² &gt; 0.969</p>
+            </div>
+          </div>
+          <div class="two-col" style="gap:14px; margin-top:16px">
+            <div class="code-block">
+              <div class="code-label">Model Training (scikit-learn)</div>
+              <pre><code>from sklearn.preprocessing import (
+  PolynomialFeatures )
+from sklearn.linear_model import Ridge
+from sklearn.pipeline import Pipeline
+
+def build_model(degree=2, alpha=0.01):
+  return Pipeline([
+    ("poly", PolynomialFeatures(
+               degree=degree)),
+    ("reg",  Ridge(alpha=alpha)),
+  ])
+
+# Train per biomass type
+for biomass in biomass_types:
+  X = speeds.reshape(-1, 1)
+  y = energy_values[biomass]
+  model = build_model().fit(X, y)</code></pre>
+            </div>
+            <div>
+              <div class="hwb-why-box">
+                <div class="hwb-why-title">Why Per-Biomass Models?</div>
+                <div class="hwb-why-comparison">
+                  <div class="hwb-why-bad">
+                    <div class="hwb-why-label">❌ Single model (all biomass)</div>
+                    <div class="hwb-why-r2">R² ≈ 0.64</div>
+                    <div class="hwb-why-desc">Integer encoding biomass type creates meaningless polynomial cross-terms</div>
+                  </div>
+                  <div class="hwb-why-good">
+                    <div class="hwb-why-label">✅ One model per biomass</div>
+                    <div class="hwb-why-r2">R² ≈ 0.99</div>
+                    <div class="hwb-why-desc">Each biomass has its own physical grinding behavior — separate models fit perfectly</div>
+                  </div>
+                </div>
+              </div>
+              <div class="hwb-callout" style="margin-top:12px">
+                <span class="hc-icon">📐</span>
+                <span>Input: [speed] → PolynomialFeatures → [1, speed, speed²] → Ridge → prediction</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: API -->
+      <div class="hwb-step-card mt-4">
+        <div class="hwb-step-num">STEP 03</div>
+        <div class="hwb-step-content">
+          <div class="hwb-step-header">
+            <div class="hwb-step-icon">⚡</div>
+            <div>
+              <h3>Building the FastAPI Backend</h3>
+              <p>FastAPI automatically generates a REST API — models load once at startup, predictions are served in milliseconds</p>
+            </div>
+          </div>
+          <div class="two-col" style="gap:14px; margin-top:16px">
+            <div class="code-block">
+              <div class="code-label">API Endpoint (app.py)</div>
+              <pre><code>from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class KnifeRequest(BaseModel):
+  biomass_type: str
+  speed: float
+
+@app.post("/api/predict/knife-mill")
+async def predict(req: KnifeRequest):
+  energy, power, particle = \
+    predict_knife(req.biomass_type,
+                  req.speed)
+  return {
+    "predictions": {
+      "specific_energy_mj_per_kg":
+         round(energy, 4),
+      "mean_power_watts":
+         round(power, 1),
+    }
+  }</code></pre>
+            </div>
+            <div class="api-endpoints-list">
+              <div class="api-ep-title">6 Live API Endpoints</div>
+              <div class="api-ep"><span class="ep-method get">GET</span><span class="ep-path">/api/health</span><span class="ep-desc">Server status</span></div>
+              <div class="api-ep"><span class="ep-method get">GET</span><span class="ep-path">/api/experimental-data</span><span class="ep-desc">Raw paper data</span></div>
+              <div class="api-ep"><span class="ep-method post">POST</span><span class="ep-path">/api/predict/knife-mill</span><span class="ep-desc">Energy prediction</span></div>
+              <div class="api-ep"><span class="ep-method post">POST</span><span class="ep-path">/api/predict/hammer-mill</span><span class="ep-desc">Industrial prediction</span></div>
+              <div class="api-ep"><span class="ep-method post">POST</span><span class="ep-path">/api/optimize</span><span class="ep-desc">Find optimal speed</span></div>
+              <div class="api-ep"><span class="ep-method get">GET</span><span class="ep-path">/api/sweep/knife/{biomass}</span><span class="ep-desc">Full speed sweep</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Frontend -->
+      <div class="hwb-step-card mt-4">
+        <div class="hwb-step-num">STEP 04</div>
+        <div class="hwb-step-content">
+          <div class="hwb-step-header">
+            <div class="hwb-step-icon">🎨</div>
+            <div>
+              <h3>Building the Frontend</h3>
+              <p>Pure HTML + CSS + JS — no frameworks needed. Chart.js handles all visualizations. Dark biomass-green theme designed from scratch.</p>
+            </div>
+          </div>
+          <div class="two-col" style="gap:14px; margin-top:16px">
+            <div class="code-block">
+              <div class="code-label">Chart.js — Energy vs Speed (app.js)</div>
+              <pre><code>const chart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [3000,4500,6000,
+             7500,9000],
+    datasets: [{
+      label: "Alfalfa",
+      data: [1.44,1.38,1.26,
+             1.23,1.23],
+      borderColor: "#4CAF50",
+      tension: 0.35,
+      fill: false,
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    ...chartDefaults("","MJ/kg")
+  }
+});</code></pre>
+            </div>
+            <div class="code-block">
+              <div class="code-label">API Call from Frontend (app.js)</div>
+              <pre><code>async function predictKnifeMill() {
+  const res = await fetch(
+    "/api/predict/knife-mill",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
+      body: JSON.stringify({
+        biomass_type: "alfalfa",
+        speed: 6000
+      })
+    }
+  );
+  const data = await res.json();
+  renderResult(data.predictions);
+}</code></pre>
+            </div>
+          </div>
+          <div class="ui-features-row">
+            <div class="ui-feat"><span>🎨</span>Dark green CSS theme with CSS variables</div>
+            <div class="ui-feat"><span>📊</span>6 interactive Chart.js charts</div>
+            <div class="ui-feat"><span>🔄</span>Single-page app with tab navigation</div>
+            <div class="ui-feat"><span>📱</span>Responsive — works on any screen size</div>
+            <div class="ui-feat"><span>⚡</span>No page reloads — all updates via JS</div>
+            <div class="ui-feat"><span>🎛️</span>Live sliders update predictions instantly</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: How optimization works -->
+      <div class="hwb-step-card mt-4">
+        <div class="hwb-step-num">STEP 05</div>
+        <div class="hwb-step-content">
+          <div class="hwb-step-header">
+            <div class="hwb-step-icon">⚡</div>
+            <div>
+              <h3>How the Optimization Engine Works</h3>
+              <p>We sweep every possible RPM value, score each one, and return the minimum — no fancy solver needed</p>
+            </div>
+          </div>
+          <div class="two-col" style="gap:14px; margin-top:16px">
+            <div class="code-block">
+              <div class="code-label">Optimization Algorithm (app.py)</div>
+              <pre><code># Sweep 60 speed values from
+# 3000 to 9000 rpm
+for speed in range(3000,9001,100):
+  energy, power, particle = \
+    predict_knife(biomass, speed)
+
+  # Score = energy + particle
+  # penalty if target given
+  score = energy
+  if target_particle_size:
+    score += abs(particle
+      - target_particle_size) * 0.5
+
+  results.append({
+    "speed": speed,
+    "energy": energy,
+    "score": score
+  })
+
+# Return lowest scoring point
+optimal = min(results,
+  key=lambda r: r["score"])</code></pre>
+            </div>
+            <div>
+              <div class="opt-flow-diagram">
+                <div class="ofd-step"><span class="ofd-n">1</span><span>User picks biomass + optional target particle size</span></div>
+                <div class="ofd-arrow">↓</div>
+                <div class="ofd-step"><span class="ofd-n">2</span><span>Backend sweeps 60 speed values (3000 → 9000 rpm)</span></div>
+                <div class="ofd-arrow">↓</div>
+                <div class="ofd-step"><span class="ofd-n">3</span><span>ML model predicts energy + particle size at each speed</span></div>
+                <div class="ofd-arrow">↓</div>
+                <div class="ofd-step"><span class="ofd-n">4</span><span>Score = energy + penalty if particle size deviates from target</span></div>
+                <div class="ofd-arrow">↓</div>
+                <div class="ofd-step ofd-highlight"><span class="ofd-n">5</span><span>Return speed with lowest score → shown with full sweep chart</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Architecture summary -->
+      <div class="card mt-4">
+        <div class="card-header"><h3>Full System Architecture</h3></div>
+        <div class="arch-flow">
+          <div class="af-box af-browser">
+            <div class="af-icon">🌐</div>
+            <div class="af-title">Browser</div>
+            <div class="af-items">
+              <span>index.html</span>
+              <span>style.css</span>
+              <span>app.js</span>
+              <span>Chart.js</span>
+            </div>
+          </div>
+          <div class="af-conn">
+            <div class="af-conn-line"></div>
+            <div class="af-conn-label">HTTP / JSON REST API</div>
+            <div class="af-conn-line"></div>
+          </div>
+          <div class="af-box af-api">
+            <div class="af-icon">⚡</div>
+            <div class="af-title">FastAPI + Uvicorn</div>
+            <div class="af-items">
+              <span>6 endpoints</span>
+              <span>Request validation</span>
+              <span>Static file serving</span>
+            </div>
+          </div>
+          <div class="af-conn">
+            <div class="af-conn-line"></div>
+            <div class="af-conn-label">Python function calls</div>
+            <div class="af-conn-line"></div>
+          </div>
+          <div class="af-box af-ml">
+            <div class="af-icon">🤖</div>
+            <div class="af-title">ML Models (scikit-learn)</div>
+            <div class="af-items">
+              <span>4 trained models</span>
+              <span>Poly degree=2</span>
+              <span>Ridge α=0.01</span>
+              <span>R² &gt; 0.98</span>
+            </div>
+          </div>
+          <div class="af-conn">
+            <div class="af-conn-line"></div>
+            <div class="af-conn-label">Hard-coded from paper</div>
+            <div class="af-conn-line"></div>
+          </div>
+          <div class="af-box af-data">
+            <div class="af-icon">📄</div>
+            <div class="af-title">Experimental Data</div>
+            <div class="af-items">
+              <span>Table 1 (energy)</span>
+              <span>Table 2 (granulo)</span>
+              <span>Figures 6 &amp; 7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
